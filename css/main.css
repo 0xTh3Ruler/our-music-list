@@ -1,5 +1,6 @@
-body {
-  background: #dfe7ef;
+html, body {
+  height: 100%;
+  margin: 0;
   font-family: "Bitter", serif;
 }
 
@@ -17,29 +18,89 @@ body {
 }
 
 .wrapper {
+  position: relative;
   width: 100%;
+  min-height: 100vh; /* Minimum height of viewport height */
   display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto; /* Allow scrolling if content exceeds viewport */
+}
+
+
+.wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: inherit;
+  background-size: cover;
+  background-position: center;
+  filter: blur(10px); /* Adjust the blur radius as needed */
+  z-index: -1; /* Ensure it’s behind the content */
+  /* Ensure the pseudo-element takes the full height of the viewport */
+  background-attachment: fixed; /* Ensures the background stays fixed */
+}
+
+/* Background overlay with fixed position */
+.background-overlay {
+  position: fixed; /* Fixed positioning to cover the entire viewport */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('your-background-image-url'); /* Adjust to your image URL */
+  background-size: cover;
+  background-position: center;
+  filter: blur(10px); /* Adjust the blur radius as needed */
+  z-index: -1; /* Ensure it's behind the content */
+}
+
+/* Content container */
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: row; /* Default direction for larger screens */
   align-items: center;
   justify-content: center;
-  min-height: 100vh; /* Ensures the wrapper takes at least the full height of the viewport */
-  height: auto; /* Allows the wrapper to expand based on its content */
-  background-size: cover;
-  overflow: auto; /* Adds scrolling if the content exceeds the viewport height */
+  width: 100%;
+  z-index: 1; /* Ensure content is above the overlay */
 }
-@media screen and (max-width: 700px), (max-height: 500px) {
+
+/* Media query for smaller screens */
+@media screen and (max-width: 700px), screen and (max-height: 500px) {
   .wrapper {
-    flex-direction: column;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+  }
+
+  .content {
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+    width: 100%;
+  }
+
+  .player, .music_list, .button-container {
+    width: 100%; /* Make sure each item takes full width */
+    text-align: center; /* Center text inside the elements */
   }
 }
 
 .player {
-  background: #eef3f7;
-  width: 410px;
-  min-height: 480px;
-  box-shadow: 0px 15px 35px -5px rgba(50, 88, 130, 0.32);
-  border-radius: 15px;
-  padding: 30px;
   position: relative;
+  z-index: 2;
+  padding: 20px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.2); /* Glass-like effect */
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  max-width: 500px;
+  color: #fff;
 }
 @media screen and (max-width: 576px), (max-height: 500px) {
   .player {
@@ -55,14 +116,17 @@ body {
 /* Music List */
 .music_list {
   height: 100%; /* Full height of the parent container */
-  background: #eef3f7; /* Semi-transparent background */
   width: 400px; /* Width of the list */
   max-height: 480px; /* Maximum height */
   margin-left: 30px; /* Position relative to the player */
   border-radius: 15px;
   overflow-y: auto; /* Scrollable if content overflows */
   padding: 15px;
-  box-shadow: 0px 15px 35px -5px rgba(50, 88, 130, 0.32);
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.2); /* Glass-like effect */
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   position: relative; /* Ensure it doesn't affect other elements */
   display: flex; /* Flexbox to handle item alignment */
   flex-direction: column; /* Vertical alignment */
@@ -383,14 +447,14 @@ body {
   justify-content: space-between;
 }
 .progress__duration {
-  color: #71829e;
+  color: #ecf0f1;
   font-weight: 700;
   font-size: 20px;
   opacity: 0.5;
 }
 .progress__time {
   margin-top: 2px;
-  color: #71829e;
+  color: #ecf0f1;
   font-weight: 700;
   font-size: 16px;
   opacity: 0.7;
@@ -413,7 +477,7 @@ body {
 }
 
 .album-info {
-  color: #71829e;
+  color: #ecf0f1;
   flex: 1;
   padding-right: 60px;
   user-select: none;
@@ -461,6 +525,7 @@ body {
   flex-direction: column; /* Stack buttons vertically by default */
   margin-bottom: 10px;
   margin-top: 10px;
+  z-index: 2;
 }
 
 .button-container button {
