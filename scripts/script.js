@@ -168,6 +168,15 @@ new Vue({
   computed: {
     playlistName() {
       return this.currentList == 'abdelmalek' ? "Abdelmalek's Playlist" : "Salma's Playlist";
+    },
+    currentTrack() {
+      return this.tracks[this.currentTrackIndex];
+    },
+    currentBackground() {
+      if (this.currentTrack) {
+        return this.currentTrack.cover;
+      }
+      return ''; // Fallback background if no track
     }
   },
   methods: {
@@ -311,12 +320,14 @@ new Vue({
       this.circleLeft = 0;
       this.audio.currentTime = 0;
       this.audio.src = this.currentTrack.source;
+  
       setTimeout(() => {
         if(this.isTimerPlaying) {
           this.audio.play();
         } else {
           this.audio.pause();
         }
+        this.setBackgroundFromCover();  // Set the background based on the current cover
       }, 300);
     },
     favorite() {
@@ -339,15 +350,16 @@ new Vue({
       vm.nextTrack();
       this.isTimerPlaying = true;
     };
-
+  
     // this is optional (for preload covers)
     for (let index = 0; index < this.tracks.length; index++) {
       const element = this.tracks[index];
       let link = document.createElement('link');
       link.rel = "prefetch";
       link.href = element.cover;
-      link.as = "image"
-      document.head.appendChild(link)
+      link.as = "image";
+      document.head.appendChild(link);
     }
   }
+  
 });
